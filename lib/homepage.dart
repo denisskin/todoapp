@@ -14,15 +14,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool fViewAll = false;
+
   @override
   Widget build(BuildContext context) {
     final store = widget.store;
-    final tasks = store.listTasks();
+    final tasks = store.listTasks(all: fViewAll);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Мои дела'),
+        title: Text('Мои дела (${store.countCompletedTasks()})'),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            icon:
+                Icon(fViewAll ? Icons.visibility_sharp : Icons.visibility_off),
+            onPressed: () => setState(() {
+              fViewAll = !fViewAll;
+            }),
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: tasks.length,
@@ -34,7 +46,7 @@ class _HomePageState extends State<HomePage> {
               value: task.completed,
               onChanged: (v) => setState(() {
                 task.completed = v as bool;
-                store.setTask(task);
+                store.updateTask(task);
               }),
             ),
             onTap: () => openTask(context, task.id),

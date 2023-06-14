@@ -1,50 +1,64 @@
 class Storage {
   List<Task?> tasks = [
-    Task(id: 1, title: 'Покупки'),
-    Task(id: 2, title: 'Сходить в спортзал', completed: true),
-    Task(id: 3, title: 'Прочитать книгу'),
+    Task(id: 1, title: 'Купить молока', completed: true),
+    Task(id: 2, title: 'Купить квартиру в Москве'),
+    Task(id: 3, title: 'Сходить в спортзал', completed: true),
+    Task(id: 4, title: 'Прочитать Атлант Расправил Плечи'),
+    Task(id: 5, title: 'Найти девушку с зп 300к руб.'),
   ];
 
   Storage() {
-    // todo: load tasks from persistent storage
+    // todo: load tasks from persistent storage or by network
   }
 
   List<Task?> listTasks({bool all = false}) {
     if (all) return tasks;
 
-    return tasks;
+    // select uncompleted tasks only
+    final arr = <Task?>[];
+    for (var task in tasks) {
+      if (!task!.completed) arr.add(task);
+    }
+    return arr;
   }
 
-  int countDone() {
+  int countCompletedTasks() {
     int n = 0;
-    tasks.forEach((task) {
+    for (var task in tasks) {
       if (task!.completed) n++;
-    });
+    }
     return n;
   }
 
   Task getTaskByID(int id) {
-    if (id <= 0) {
-      return Task();
-    }
-    return tasks[id - 1] ?? Task(id: id);
+    final i = _taskIdx(id);
+    if (i >= 0) return tasks[i]!;
+    return Task(id: id);
   }
 
   int addTask() {
-    final id = tasks.length + 1;
+    final id = (tasks.last?.id ?? 0) + 1;
     tasks.add(Task(
       id: id,
-      title: '', //'''Задание #$id',
-      completed: false,
+      title: '',
     ));
     return id;
   }
 
-  setTask(Task task) {
-    if (task.id == 0) {
-      return addTask();
+  updateTask(Task task) {
+    if (task.id == 0) task.id = addTask();
+    tasks[_taskIdx(task.id)] = task;
+  }
+
+  removeTask(int id) {
+    if (id != 0) tasks.removeAt(_taskIdx(id));
+  }
+
+  int _taskIdx(int id) {
+    for (int i = 0; i < tasks.length; i++) {
+      if (tasks[i]!.id == id) return i;
     }
-    tasks[task.id - 1] = task;
+    return -1;
   }
 }
 
@@ -59,6 +73,17 @@ class Task {
     this.id = 0,
     this.title = '',
     this.completed = false,
-    this.priority = '', // TaskPriority.no,
+    this.priority = '',
+    this.to,
   });
+
+  Task copy() {
+    return Task(
+      id: id,
+      title: title,
+      completed: completed,
+      to: to,
+      priority: priority,
+    );
+  }
 }

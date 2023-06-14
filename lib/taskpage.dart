@@ -18,24 +18,34 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   Task task = Task();
 
-  _TaskPageState();
-
   @override
   void initState() {
     super.initState();
 
-    task = widget.store.getTaskByID(widget.id);
+    task = widget.store.getTaskByID(widget.id).copy();
   }
+
+  bool get saveEnabled => task.title.isNotEmpty;
+  bool get removeEnabled => task.id != 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(task.title),
+        leading: IconButton(
+          icon: Icon(Icons.close),
+          onPressed: close,
+        ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: close,
+          TextButton(
+            onPressed: saveEnabled ? save : null,
+            child: Text(
+              'Сохранить',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+              ),
+            ),
           ),
         ],
       ),
@@ -99,7 +109,7 @@ class _TaskPageState extends State<TaskPage> {
             TextButton.icon(
               icon: const Icon(Icons.delete),
               label: const Text('Удалить'),
-              onPressed: delete,
+              onPressed: removeEnabled ? delete : null,
             ),
           ],
         ),
@@ -107,7 +117,13 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
+  save() {
+    widget.store.updateTask(task);
+    close();
+  }
+
   delete() {
+    widget.store.removeTask(task.id);
     close();
   }
 
@@ -115,14 +131,13 @@ class _TaskPageState extends State<TaskPage> {
     Navigator.of(context).pop();
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+  _selectDate(BuildContext context) async {
+    final picked = await showDatePicker(
       context: context,
       initialDate: task.to ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
-
     setState(() {
       task.to = picked;
     });
