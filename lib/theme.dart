@@ -22,9 +22,42 @@ abstract class MyTheme {
   //app
   static final appTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+    // colorScheme: const ColorScheme.light(),
+  );
+
+  static final lightAppTheme = ThemeData(
+    brightness: Brightness.light,
+    colorSchemeSeed: backPrimary,
+    useMaterial3: true,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: backPrimary,
+      foregroundColor: labelPrimary,
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      foregroundColor: colorWhite,
+      backgroundColor: colorBlue,
+      shape: CircleBorder(),
+    ),
+    scaffoldBackgroundColor: backPrimary,
+  );
+
+  static final darkAppTheme = ThemeData(
+    brightness: Brightness.dark,
+    colorSchemeSeed: DarkThemeColors.backSecondary,
+    useMaterial3: true,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: DarkThemeColors.backPrimary,
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      shape: CircleBorder(),
+      foregroundColor: DarkThemeColors.colorWhite,
+      backgroundColor: DarkThemeColors.colorBlue,
+    ),
+    scaffoldBackgroundColor: DarkThemeColors.backPrimary,
   );
 
   static const cbxActiveColor = Colors.green;
+
   static const cbxHighBorder = BorderSide(color: Colors.red, width: 2);
 
   static const supportSeparator = Color(0x33000000);

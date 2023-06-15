@@ -37,7 +37,7 @@ class _TaskPageState extends State<TaskPage> {
           TextButton(
             onPressed: saveEnabled ? save : null,
             child: Text(
-              'Сохранить',
+              'СОХРАНИТЬ',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16.0,

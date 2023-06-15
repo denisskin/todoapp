@@ -4,22 +4,24 @@ import 'package:todoapp/taskpage.dart';
 import 'package:todoapp/theme.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Ya To Do App',
-      theme: MyTheme.appTheme,
+
+      theme: MyTheme.lightAppTheme,
+      // darkTheme: MyTheme.darkAppTheme,
       initialRoute: '/',
       routes: {
         '/': (_) => const HomePage(),
-        '/task': (ctx) => TaskPage(id: routeArg(ctx)),
+        '/task': (context) => TaskPage(id: routeArg(context)),
       },
     );
   }
