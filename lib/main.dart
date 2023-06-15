@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:todoapp/homepage.dart';
-import 'package:todoapp/storage.dart';
 import 'package:todoapp/taskpage.dart';
 import 'package:todoapp/testpage.dart';
 
@@ -11,8 +10,6 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final db = Storage();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,8 +18,8 @@ class MyApp extends StatelessWidget {
       theme: appTheme(context),
       initialRoute: '/',
       routes: {
-        '/': (_) => HomePage(store: db),
-        '/task': (ctx) => TaskPage(store: db, id: routeArg(ctx)),
+        '/': (_) => HomePage(),
+        '/task': (ctx) => TaskPage(id: routeArg(ctx)),
         '/test': (_) => TestPage(),
       },
     );

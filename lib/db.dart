@@ -1,5 +1,9 @@
-class Storage {
-  final _tasks = <Task?>[
+abstract class DB {
+  static final tasks = TasksDB();
+}
+
+class TasksDB {
+  final rows = <Task?>[
     Task(id: 1, title: 'Купить молока', completed: true),
     Task(id: 2, title: 'Купить квартиру в Москве'),
     Task(id: 3, title: 'Сходить в спортзал', completed: true),
@@ -7,55 +11,55 @@ class Storage {
     Task(id: 5, title: 'Найти девушку с зп 300к руб.'),
   ];
 
-  Storage() {
+  TasksDB() {
     // todo: load tasks from persistent storage or by network
   }
 
-  List<Task?> allTasks() {
-    return _tasks;
+  List<Task?> listAll() {
+    return rows;
   }
 
-  List<Task?> currentTasks() {
+  List<Task?> listCurrent() {
     // select uncompleted tasks only
     final arr = <Task?>[];
-    for (var task in _tasks) {
+    for (var task in rows) {
       if (!task!.completed) arr.add(task);
     }
     return arr;
   }
 
-  int countCompletedTasks() {
+  int countCompleted() {
     int n = 0;
-    for (var task in _tasks) {
+    for (var task in rows) {
       if (task!.completed) n++;
     }
     return n;
   }
 
-  Task getTaskByID(int id) {
-    final i = _taskIdx(id);
-    if (i >= 0) return _tasks[i]!.copy();
+  Task get(int id) {
+    final i = _idx(id);
+    if (i >= 0) return rows[i]!.copy();
     return Task(id: id);
   }
 
-  int addTask() {
-    final id = (_tasks.last?.id ?? 0) + 1;
-    _tasks.add(Task(id: id));
+  int add() {
+    final id = (rows.last?.id ?? 0) + 1;
+    rows.add(Task(id: id));
     return id;
   }
 
-  updateTask(Task task) {
-    if (task.id == 0) task.id = addTask();
-    _tasks[_taskIdx(task.id)] = task;
+  update(Task task) {
+    if (task.id == 0) task.id = add();
+    rows[_idx(task.id)] = task;
   }
 
-  removeTask(int id) {
-    if (id != 0) _tasks.removeAt(_taskIdx(id));
+  remove(int id) {
+    if (id != 0) rows.removeAt(_idx(id));
   }
 
-  int _taskIdx(int id) {
-    for (int i = 0; i < _tasks.length; i++) {
-      if (_tasks[i]!.id == id) return i;
+  int _idx(int id) {
+    for (int i = 0; i < rows.length; i++) {
+      if (rows[i]!.id == id) return i;
     }
     return -1;
   }

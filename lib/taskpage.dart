@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:todoapp/storage.dart';
+import 'package:todoapp/db.dart';
 
 class TaskPage extends StatefulWidget {
-  final Storage store;
   final int id;
 
   const TaskPage({
     super.key,
-    required this.store,
     required this.id,
   });
 
@@ -21,8 +19,7 @@ class _TaskPageState extends State<TaskPage> {
   @override
   void initState() {
     super.initState();
-
-    task = widget.store.getTaskByID(widget.id);
+    task = DB.tasks.get(widget.id);
   }
 
   bool get saveEnabled => task.title.isNotEmpty;
@@ -118,12 +115,12 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   save() {
-    widget.store.updateTask(task);
+    DB.tasks.update(task);
     close();
   }
 
   delete() {
-    widget.store.removeTask(task.id);
+    DB.tasks.remove(task.id);
     close();
   }
 

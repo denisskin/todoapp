@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:todoapp/storage.dart';
+import 'package:todoapp/db.dart';
+import 'package:todoapp/theme.dart';
 
 class HomePage extends StatefulWidget {
-  final Storage store;
+  // final Storage store;
 
   const HomePage({
     super.key,
-    required this.store,
+    // required this.store,
   });
 
   @override
@@ -18,13 +19,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final store = widget.store;
-    final tasks = fViewAll ? store.allTasks() : store.currentTasks();
+    final tasks = fViewAll ? DB.tasks.listAll() : DB.tasks.listCurrent();
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Мои дела (${store.countCompletedTasks()})'),
+        title: Text('Мои дела (${DB.tasks.countCompleted()})'),
         centerTitle: false,
         actions: [
           IconButton(
@@ -38,31 +38,126 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ListView.builder(
         itemCount: tasks.length,
-        itemBuilder: (context, index) {
-          final task = tasks[index]!;
-          return ListTile(
-            title: Text(task.title),
-            leading: Checkbox(
-              value: task.completed,
-              onChanged: (v) => setState(() {
-                task.completed = v!;
-                store.updateTask(task);
-              }),
-            ),
-            onTap: () => openTask(context, task.id),
-          );
-        },
+        itemBuilder: (ctx, i) => _itemTile(ctx, tasks[i]!),
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Добавить новое',
+        tooltip: 'Добавить',
         child: const Icon(Icons.add),
         onPressed: () => openTask(context, 0),
       ),
     );
   }
 
+  Widget _itemTile(BuildContext context, Task task) {
+    return Dismissible(
+      key: Key('${task.id}'),
+      background: Container(
+        color: MyTheme.colorGreen,
+        child: const Align(
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 20),
+              Icon(Icons.check, color: Colors.white),
+            ],
+          ),
+        ),
+      ),
+      secondaryBackground: Container(
+        color: Colors.red,
+        child: const Align(
+          alignment: Alignment.centerRight,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Icon(Icons.delete, color: Colors.white),
+              SizedBox(width: 20),
+            ],
+          ),
+        ),
+      ),
+      confirmDismiss: (direction) async {
+        if (direction == DismissDirection.startToEnd) {
+          setTaskComplete(task, true);
+        } else {
+          removeTask(task.id);
+        }
+        return false;
+      },
+      child: InkWell(
+        onTap: () => openTask(context, task.id),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 14.0,
+            vertical: 14.0,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 30,
+                height: 30,
+                child: Checkbox(
+                  value: task.completed,
+                  onChanged: (v) => setTaskComplete(task, v!),
+                ),
+                // child: CheckBoxIconWidget(task: task),
+              ),
+              const SizedBox(width: 14),
+              //if (!isTaskCompleted && task.importance != null)ImportanceMarkWidget(task: task),
+              // TaskTextWidget(task: task),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      task.title,
+                      style: task.completed
+                          ? MyTheme.itemCompletedTextStyle
+                          : MyTheme.itemRegularTextStyle,
+                    ),
+                    // if (isDateSetted && !isTaskCompleted)
+                    //   Text('дата', style: dateTextStyle),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 14),
+              const SizedBox(
+                width: 30,
+                height: 30,
+                child: MyTheme.infoIcon,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    return ListTile(
+      title: Text(task.title),
+      leading: Checkbox(
+        value: task.completed,
+        onChanged: (v) => setTaskComplete(task, v!),
+      ),
+      onTap: () => openTask(context, task.id),
+    );
+  }
+
   openTask(BuildContext context, int id) async {
     await Navigator.of(context).pushNamed('/task', arguments: id);
     setState(() {});
+  }
+
+  setTaskComplete(Task task, bool f) {
+    setState(() {
+      task.completed = f;
+      DB.tasks.update(task);
+    });
+  }
+
+  removeTask(int id) {
+    setState(() {
+      DB.tasks.remove(id);
+    });
   }
 }
