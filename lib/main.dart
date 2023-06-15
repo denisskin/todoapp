@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todoapp/homepage.dart';
 import 'package:todoapp/taskpage.dart';
-import 'package:todoapp/testpage.dart';
+import 'package:todoapp/theme.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,29 +15,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Ya To Do App',
-      theme: appTheme(context),
+      theme: MyTheme.appTheme,
       initialRoute: '/',
       routes: {
-        '/': (_) => HomePage(),
+        '/': (_) => const HomePage(),
         '/task': (ctx) => TaskPage(id: routeArg(ctx)),
-        '/test': (_) => TestPage(),
       },
     );
   }
-}
-
-ThemeData appTheme(BuildContext context) {
-  final brightness = MediaQuery.of(context).platformBrightness;
-  if (brightness == Brightness.dark) {
-    // theme = brightness == Brightness.dark ? ThemeData.dark() : ThemeData.light()
-    return ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigoAccent),
-    );
-  }
-  return ThemeData(
-    colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-    //useMaterial3: true,
-  );
 }
 
 int routeArg(BuildContext context) {

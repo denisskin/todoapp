@@ -5,10 +5,10 @@ abstract class DB {
 class TasksDB {
   final rows = <Task?>[
     Task(id: 1, title: 'Купить молока', completed: true),
-    Task(id: 2, title: 'Купить квартиру в Москве'),
+    Task(id: 2, title: 'Купить квартиру в Москве', priority: 'low'),
     Task(id: 3, title: 'Сходить в спортзал', completed: true),
     Task(id: 4, title: 'Наконец-то уже дочитать Атлант расправил плечи'),
-    Task(id: 5, title: 'Найти девушку с зп 300к руб.'),
+    Task(id: 5, title: 'Найти девушку с зп 300к руб.', priority: 'high'),
   ];
 
   TasksDB() {
@@ -88,5 +88,9 @@ class Task {
       to: to,
       priority: priority,
     );
+  }
+
+  bool isHighPriority() {
+    return priority == 'high';
   }
 }

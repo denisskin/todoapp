@@ -3,12 +3,7 @@ import 'package:todoapp/db.dart';
 import 'package:todoapp/theme.dart';
 
 class HomePage extends StatefulWidget {
-  // final Storage store;
-
-  const HomePage({
-    super.key,
-    // required this.store,
-  });
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -101,8 +96,9 @@ class _HomePageState extends State<HomePage> {
                 child: Checkbox(
                   value: task.completed,
                   onChanged: (v) => setTaskComplete(task, v!),
+                  activeColor: MyTheme.cbxActiveColor,
+                  side: task.isHighPriority() ? MyTheme.cbxHighBorder : null,
                 ),
-                // child: CheckBoxIconWidget(task: task),
               ),
               const SizedBox(width: 14),
               //if (!isTaskCompleted && task.importance != null)ImportanceMarkWidget(task: task),
@@ -132,14 +128,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-    );
-    return ListTile(
-      title: Text(task.title),
-      leading: Checkbox(
-        value: task.completed,
-        onChanged: (v) => setTaskComplete(task, v!),
-      ),
-      onTap: () => openTask(context, task.id),
     );
   }
 

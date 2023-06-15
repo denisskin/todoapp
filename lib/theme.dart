@@ -13,11 +13,20 @@ final AppTheme themeLight = AppTheme();
 final AppTheme themeDark = AppThemeDark();
 
 AppTheme currTheme(BuildContext context) {
+  //final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
   final isDark = Theme.of(context).brightness == Brightness.dark;
   return isDark ? themeDark : themeLight;
 }
 
 abstract class MyTheme {
+  //app
+  static final appTheme = ThemeData(
+    colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+  );
+
+  static const cbxActiveColor = Colors.green;
+  static const cbxHighBorder = BorderSide(color: Colors.red, width: 2);
+
   static const supportSeparator = Color(0x33000000);
   static const supportOverlay = Color(0x0F000000);
   static const labelPrimary = Color(0xFF000000);
