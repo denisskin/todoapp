@@ -1,9 +1,9 @@
 class Storage {
-  List<Task?> tasks = [
+  final _tasks = <Task?>[
     Task(id: 1, title: 'Купить молока', completed: true),
     Task(id: 2, title: 'Купить квартиру в Москве'),
     Task(id: 3, title: 'Сходить в спортзал', completed: true),
-    Task(id: 4, title: 'Прочитать Атлант Расправил Плечи'),
+    Task(id: 4, title: 'Наконец-то уже дочитать Атлант расправил плечи'),
     Task(id: 5, title: 'Найти девушку с зп 300к руб.'),
   ];
 
@@ -11,12 +11,14 @@ class Storage {
     // todo: load tasks from persistent storage or by network
   }
 
-  List<Task?> listTasks({bool all = false}) {
-    if (all) return tasks;
+  List<Task?> allTasks() {
+    return _tasks;
+  }
 
+  List<Task?> currentTasks() {
     // select uncompleted tasks only
     final arr = <Task?>[];
-    for (var task in tasks) {
+    for (var task in _tasks) {
       if (!task!.completed) arr.add(task);
     }
     return arr;
@@ -24,7 +26,7 @@ class Storage {
 
   int countCompletedTasks() {
     int n = 0;
-    for (var task in tasks) {
+    for (var task in _tasks) {
       if (task!.completed) n++;
     }
     return n;
@@ -32,13 +34,13 @@ class Storage {
 
   Task getTaskByID(int id) {
     final i = _taskIdx(id);
-    if (i >= 0) return tasks[i]!;
+    if (i >= 0) return _tasks[i]!;
     return Task(id: id);
   }
 
   int addTask() {
-    final id = (tasks.last?.id ?? 0) + 1;
-    tasks.add(Task(
+    final id = (_tasks.last?.id ?? 0) + 1;
+    _tasks.add(Task(
       id: id,
       title: '',
     ));
@@ -47,16 +49,16 @@ class Storage {
 
   updateTask(Task task) {
     if (task.id == 0) task.id = addTask();
-    tasks[_taskIdx(task.id)] = task;
+    _tasks[_taskIdx(task.id)] = task;
   }
 
   removeTask(int id) {
-    if (id != 0) tasks.removeAt(_taskIdx(id));
+    if (id != 0) _tasks.removeAt(_taskIdx(id));
   }
 
   int _taskIdx(int id) {
-    for (int i = 0; i < tasks.length; i++) {
-      if (tasks[i]!.id == id) return i;
+    for (int i = 0; i < _tasks.length; i++) {
+      if (_tasks[i]!.id == id) return i;
     }
     return -1;
   }

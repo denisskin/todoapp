@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final store = widget.store;
-    final tasks = store.listTasks(all: fViewAll);
+    final tasks = fViewAll ? store.allTasks() : store.currentTasks();
 
     return Scaffold(
       appBar: AppBar(
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
             leading: Checkbox(
               value: task.completed,
               onChanged: (v) => setState(() {
-                task.completed = v as bool;
+                task.completed = v!;
                 store.updateTask(task);
               }),
             ),
@@ -70,8 +70,4 @@ class _HomePageState extends State<HomePage> {
     final id = widget.store.addTask();
     openTask(context, id);
   }
-
-  // Widget taskTile(BuildContext context, Task task ){
-  //   return
-  // }
 }

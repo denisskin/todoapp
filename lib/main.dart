@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todoapp/homepage.dart';
 import 'package:todoapp/storage.dart';
 import 'package:todoapp/taskpage.dart';
+import 'package:todoapp/testpage.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (_) => HomePage(store: db),
         '/task': (ctx) => TaskPage(store: db, id: routeArg(ctx)),
+        '/test': (_) => TestPage(),
       },
     );
   }
