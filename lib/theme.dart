@@ -19,8 +19,6 @@ AppTheme currTheme(BuildContext context) {
 }
 
 abstract class MyTheme {
-  //app
-
   static final lightAppTheme = ThemeData(
     brightness: Brightness.light,
     colorSchemeSeed: backPrimary,
@@ -52,12 +50,12 @@ abstract class MyTheme {
     scaffoldBackgroundColor: DarkThemeColors.backPrimary,
   );
 
-  static const iconView = Icon(Icons.visibility_sharp, color: Colors.blue);
-  static const iconViewAll = Icon(Icons.visibility_off, color: Colors.blue);
-  static const colorBgSecondary = Color(0xFFFFFFFF);
+  static const iconView = Icon(Icons.visibility_sharp, color: colorBlue);
+  static const iconViewAll = Icon(Icons.visibility_off, color: colorBlue);
+
   static const textDone = TextStyle(
     fontSize: 16,
-    color: Color(0x4D000000),
+    color: labelTertiary,
   );
 
   static final textAppBar = GoogleFonts.roboto(
@@ -71,44 +69,43 @@ abstract class MyTheme {
     color: labelSecondary,
   );
 
-  static const cbxActiveColor = Colors.green;
-
-  static const cbxHighBorder = BorderSide(color: Colors.red, width: 2);
+  static const cbxHighBorder = BorderSide(color: colorRed, width: 2);
 
   static const supportSeparator = Color(0x33000000);
   static const supportOverlay = Color(0x0F000000);
+
   static const labelPrimary = Color(0xFF000000);
   static const labelSecondary = Color(0x99000000);
-  static const labelTertiaryColor = Color(0x4D000000);
-
-  static const infoIconColor = Color(0x4D000000);
-
-  static const infoIcon = Icon(
-    Icons.info_outline,
-    color: infoIconColor,
-    size: 27,
-  );
-
+  static const labelTertiary = Color(0x4D000000);
   static const labelDisable = Color(0x26000000);
+
   static const colorRed = Color(0xFFFF3B30);
   static const colorGreen = Color(0xFF34C759);
   static const colorBlue = Color(0xFF007AFF);
   static const colorGray = Color(0xFF8E8E93);
   static const colorGrayLight = Color(0xFFD1D1D6);
   static const colorWhite = Color(0xFFFFFFFF);
+
   static const backPrimary = Color(0xFFF7F6F2);
   static const backSecondary = Color(0xFFFFFFFF);
   static const backElevated = Color(0xFFFFFFFF);
-  static const customHighImportance = Color.fromRGBO(250, 225, 223, 1.0);
+
+  // static const customHighImportance = Color.fromRGBO(250, 225, 223, 1.0);
+
+  static const infoIcon = Icon(
+    Icons.info_outline,
+    color: labelTertiary,
+    size: 27,
+  );
 
   static final itemRegularTextStyle = GoogleFonts.roboto(
     fontSize: 18.0,
     fontWeight: FontWeight.w400,
   );
   static final itemCompletedTextStyle = GoogleFonts.roboto(
-    color: Color(0x4D000000), //LightThemeColors.labelTertiary,
+    color: labelTertiary,
     decoration: TextDecoration.lineThrough,
-    decorationColor: Color(0x4D000000), // LightThemeColors.labelTertiary,
+    decorationColor: labelTertiary,
     fontSize: 18.0,
     fontWeight: FontWeight.w400,
   );

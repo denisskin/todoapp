@@ -61,15 +61,15 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                    padding: const EdgeInsets.fromLTRB(70, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(73, 0, 0, 0),
                     child: Text('Выполнено – ${DB.tasks.countCompleted()}',
                         style: MyTheme.textDone)),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 40.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: MyTheme.colorBgSecondary,
-                      border: Border.all(color: MyTheme.colorBgSecondary),
+                      color: MyTheme.colorWhite,
+                      border: Border.all(color: MyTheme.colorWhite),
                       borderRadius: const BorderRadius.all(
                         Radius.circular(12),
                       ),
@@ -84,24 +84,7 @@ class _HomePageState extends State<HomePage> {
                           itemCount: tasks.length,
                           itemBuilder: (ctx, i) => _itemTile(ctx, tasks[i]!),
                         ),
-                        Padding(
-                          // New Task Button
-                          padding: const EdgeInsets.fromLTRB(60, 20, 20, 20),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () => openTask(context, 0),
-                                  child: Text(
-                                    'Новое',
-                                    style: MyTheme.buttonNewTask,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        _newTaskListButton(context),
                       ],
                     ),
                   ),
@@ -160,10 +143,7 @@ class _HomePageState extends State<HomePage> {
       child: InkWell(
         onTap: () => openTask(context, task.id),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 14.0,
-            vertical: 14.0,
-          ),
+          padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -173,13 +153,11 @@ class _HomePageState extends State<HomePage> {
                 child: Checkbox(
                   value: task.completed,
                   onChanged: (v) => setTaskComplete(task, v!),
-                  activeColor: MyTheme.cbxActiveColor,
+                  activeColor: MyTheme.colorGreen,
                   side: task.isHighPriority() ? MyTheme.cbxHighBorder : null,
                 ),
               ),
               const SizedBox(width: 14),
-              //if (!isTaskCompleted && task.importance != null)ImportanceMarkWidget(task: task),
-              // TaskTextWidget(task: task),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,11 +177,35 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 width: 30,
                 height: 30,
-                child: MyTheme.infoIcon,
+                child: Icon(
+                  Icons.info_outline,
+                  color: MyTheme.labelTertiary,
+                  size: 27,
+                ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _newTaskListButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(60, 20, 20, 20),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () => openTask(context, 0),
+              child: Text(
+                'Новое',
+                style: MyTheme.buttonNewTask,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

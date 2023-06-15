@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todoapp/db.dart';
+import 'package:todoapp/theme.dart';
 
 class TaskPage extends StatefulWidget {
   final int id;
@@ -39,7 +40,7 @@ class _TaskPageState extends State<TaskPage> {
             child: Text(
               'СОХРАНИТЬ',
               style: TextStyle(
-                color: Colors.white,
+                color: MyTheme.colorBlue,
                 fontSize: 16.0,
               ),
             ),
@@ -56,7 +57,7 @@ class _TaskPageState extends State<TaskPage> {
               decoration: InputDecoration(
                 hintText: 'Что надо сделать...',
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: MyTheme.colorWhite,
                 // border: OutlineInputBorder(
                 //   borderRadius: BorderRadius.circular(10.0),
                 // ),
