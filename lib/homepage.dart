@@ -17,23 +17,100 @@ class _HomePageState extends State<HomePage> {
     final tasks = fViewAll ? DB.tasks.listAll() : DB.tasks.listCurrent();
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Мои дела (${DB.tasks.countCompleted()})'),
-        centerTitle: false,
-        actions: [
-          IconButton(
-            icon:
-                Icon(fViewAll ? Icons.visibility_sharp : Icons.visibility_off),
-            onPressed: () => setState(() {
-              fViewAll = !fViewAll;
-            }),
+      // appBar: AppBar(
+      //   backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      //   title: Text('Мои дела (${DB.tasks.countCompleted()})'),
+      //   centerTitle: false,
+      //   actions: [
+      //     IconButton(
+      //       icon:
+      //           Icon(fViewAll ? Icons.visibility_sharp : Icons.visibility_off),
+      //       onPressed: () => setState(() {
+      //         fViewAll = !fViewAll;
+      //       }),
+      //     ),
+      //   ],
+      // ),
+      // body: ListView.builder(
+      //   itemCount: tasks.length,
+      //   itemBuilder: (ctx, i) => _itemTile(ctx, tasks[i]!),
+      // ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 120,
+            // collapsedHeight: 50,
+            // backgroundColor: TodoElementsColor.getBackPrimaryColor(context),
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text('Мои дела', style: MyTheme.textAppBar),
+              centerTitle: false,
+            ),
+            actions: [
+              IconButton(
+                icon: fViewAll ? MyTheme.iconViewAll : MyTheme.iconView,
+                onPressed: () => setState(() {
+                  fViewAll = !fViewAll;
+                }),
+              ),
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(70, 0, 0, 0),
+                    child: Text('Выполнено – ${DB.tasks.countCompleted()}',
+                        style: MyTheme.textDone)),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 40.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: MyTheme.colorBgSecondary,
+                      border: Border.all(color: MyTheme.colorBgSecondary),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(12),
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          itemCount: tasks.length,
+                          itemBuilder: (ctx, i) => _itemTile(ctx, tasks[i]!),
+                        ),
+                        Padding(
+                          // New Task Button
+                          padding: const EdgeInsets.fromLTRB(60, 20, 20, 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () => openTask(context, 0),
+                                  child: Text(
+                                    'Новое',
+                                    style: MyTheme.buttonNewTask,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 100),
+              ],
+            ),
           ),
         ],
-      ),
-      body: ListView.builder(
-        itemCount: tasks.length,
-        itemBuilder: (ctx, i) => _itemTile(ctx, tasks[i]!),
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Добавить',

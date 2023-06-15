@@ -20,10 +20,6 @@ AppTheme currTheme(BuildContext context) {
 
 abstract class MyTheme {
   //app
-  static final appTheme = ThemeData(
-    colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-    // colorScheme: const ColorScheme.light(),
-  );
 
   static final lightAppTheme = ThemeData(
     brightness: Brightness.light,
@@ -54,6 +50,25 @@ abstract class MyTheme {
       backgroundColor: DarkThemeColors.colorBlue,
     ),
     scaffoldBackgroundColor: DarkThemeColors.backPrimary,
+  );
+
+  static const iconView = Icon(Icons.visibility_sharp, color: Colors.blue);
+  static const iconViewAll = Icon(Icons.visibility_off, color: Colors.blue);
+  static const colorBgSecondary = Color(0xFFFFFFFF);
+  static const textDone = TextStyle(
+    fontSize: 16,
+    color: Color(0x4D000000),
+  );
+
+  static final textAppBar = GoogleFonts.roboto(
+    fontSize: 32.0,
+    fontWeight: FontWeight.w500,
+    color: labelPrimary,
+  );
+  static final buttonNewTask = GoogleFonts.roboto(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: labelSecondary,
   );
 
   static const cbxActiveColor = Colors.green;
@@ -129,12 +144,12 @@ abstract class AppTextStyles {
     fontWeight: FontWeight.w400,
   );
 
-  static TextStyle appbarAcionTextStyle = GoogleFonts.roboto(
+  static TextStyle appbarActionTextStyle = GoogleFonts.roboto(
     fontSize: 14.0,
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle regylarBodyText = GoogleFonts.roboto(
+  static TextStyle regularBodyText = GoogleFonts.roboto(
     fontSize: 16.0,
     fontWeight: FontWeight.w400,
   );
