@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: AppTheme.backPrimary,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text('Мои дела', style: AppTheme.textAppBar),
+              title: Text('Мои дела', style: AppTheme.appBarHeader),
               centerTitle: false,
             ),
             actions: [
@@ -42,11 +42,11 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                    padding: const EdgeInsets.fromLTRB(73, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(74, 0, 0, 0),
                     child: Text('Выполнено – ${DB.tasks.countCompleted()}',
                         style: AppTheme.textDone)),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 40.0),
+                  padding: const EdgeInsets.fromLTRB(8, 20, 8, 40),
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppTheme.colorWhite,
@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 100),
+                const SizedBox(height: 100),
               ],
             ),
           ),
@@ -143,18 +143,19 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 4),
                     Text(
                       task.title,
                       style: task.completed
                           ? AppTheme.itemCompletedTextStyle
                           : AppTheme.itemRegularTextStyle,
                     ),
-                    // if (isDateSetted && !isTaskCompleted)
-                    //   Text('дата', style: dateTextStyle),
+                    if (task.isDateSelected())
+                      Text(task.localDateString(),
+                          style: AppTheme.smallSecondaryText),
                   ],
                 ),
               ),
-              const SizedBox(width: 14),
               const SizedBox(
                 width: 30,
                 height: 30,

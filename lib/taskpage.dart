@@ -39,7 +39,7 @@ class _TaskPageState extends State<TaskPage> {
             onPressed: saveEnabled ? save : null,
             child: Text(
               'СОХРАНИТЬ',
-              style: AppTheme.textAppbarPrimaryButton,
+              style: AppTheme.appBarPrimaryButton,
             ),
           ),
         ],
@@ -63,7 +63,7 @@ class _TaskPageState extends State<TaskPage> {
                         task.title = v;
                       }),
                       autofocus: true,
-                      style: AppTextStyles.regularBodyText,
+                      style: AppTheme.regularBodyText,
                       minLines: 4,
                       maxLines: 50,
                       decoration: InputDecoration(
@@ -74,20 +74,20 @@ class _TaskPageState extends State<TaskPage> {
                         fillColor: AppTheme.backSecondary,
                         filled: true,
                         hintText: 'Что надо сделать…',
-                        hintStyle: AppTextStyles.regularHintText,
+                        hintStyle: AppTheme.regularHintText,
                       ),
                     ),
                   ),
-                  SizedBox(height: 28),
+                  const SizedBox(height: 28),
 
                   //------ priority --------
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Важность', style: AppTextStyles.regularBodyText),
+                      Text('Важность', style: AppTheme.regularBodyText),
                       DropdownButtonFormField<String>(
-                        style: AppTextStyles.smallBodyText,
+                        style: AppTheme.smallBodyText,
                         value: task.priority,
                         onChanged: (v) => setState(() {
                           task.priority = v!;
@@ -126,9 +126,9 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Сделать до'),
               onTap: () => _selectDate(context),
               subtitle: task.isDateSelected()
-                  ? Text(task.to.toString(),
+                  ? Text(task.localDateString(),
                       style: const TextStyle(color: AppTheme.colorBlue))
-                  : Text('Выберите дату'),
+                  : const Text('Выберите дату'),
               trailing: Switch(
                 activeColor: AppTheme.colorBlue,
                 value: task.isDateSelected(),

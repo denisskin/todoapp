@@ -99,6 +99,10 @@ class Task {
     );
   }
 
+  String localDateString() {
+    return to!.toString().substring(0, 10);
+  }
+
   bool isHighPriority() {
     return priority == 'high';
   }

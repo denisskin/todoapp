@@ -60,38 +60,56 @@ abstract class AppTheme {
     color: labelTertiary,
   );
 
-  static final textAppBar = GoogleFonts.roboto(
-    fontSize: 32.0,
+  static final appBarHeader = GoogleFonts.roboto(
+    fontSize: 32,
     fontWeight: FontWeight.w500,
     color: labelPrimary,
   );
+
+  static final appBarPrimaryButton = GoogleFonts.roboto(
+    color: AppTheme.colorBlue,
+    fontSize: 16,
+  );
+
+  static final regularBodyText = GoogleFonts.roboto(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
+  static final regularHintText = GoogleFonts.roboto(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppTheme.labelTertiary,
+  );
+
   static final buttonNewTask = GoogleFonts.roboto(
     fontSize: 16,
     fontWeight: FontWeight.w500,
     color: labelSecondary,
   );
 
-  static const textAppbarPrimaryButton = TextStyle(
-    color: AppTheme.colorBlue,
-    fontSize: 16,
-  );
-
-  static const infoIcon = Icon(
-    Icons.info_outline,
-    color: labelTertiary,
-    size: 27,
-  );
-
   static final itemRegularTextStyle = GoogleFonts.roboto(
-    fontSize: 18.0,
+    fontSize: 16,
     fontWeight: FontWeight.w400,
   );
+
   static final itemCompletedTextStyle = GoogleFonts.roboto(
     color: labelTertiary,
     decoration: TextDecoration.lineThrough,
     decorationColor: labelTertiary,
-    fontSize: 18.0,
+    fontSize: 16,
     fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle smallBodyText = GoogleFonts.roboto(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle smallSecondaryText = GoogleFonts.roboto(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: labelTertiary,
   );
 }
 
@@ -112,37 +130,4 @@ abstract class DarkThemeColors {
   static const backSecondary = Color(0xFF252528);
   static const backElevated = Color(0xFF3C3C3F);
   static const customHighImportance = Color.fromRGBO(68, 43, 43, 1.0);
-}
-
-abstract class AppTextStyles {
-  static TextStyle appBarTextStyle = GoogleFonts.roboto(
-    fontSize: 32,
-    fontWeight: FontWeight.w500,
-  );
-
-  static TextStyle listTextStyle = GoogleFonts.roboto(
-    fontSize: 18,
-    fontWeight: FontWeight.w400,
-  );
-
-  static TextStyle appbarActionTextStyle = GoogleFonts.roboto(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-  );
-
-  static TextStyle regularBodyText = GoogleFonts.roboto(
-    fontSize: 16,
-    fontWeight: FontWeight.w400,
-  );
-
-  static TextStyle regularHintText = GoogleFonts.roboto(
-    fontSize: 16,
-    fontWeight: FontWeight.w400,
-    color: AppTheme.labelTertiary,
-  );
-
-  static TextStyle smallBodyText = GoogleFonts.roboto(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-  );
 }
