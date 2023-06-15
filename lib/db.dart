@@ -102,4 +102,8 @@ class Task {
   bool isHighPriority() {
     return priority == 'high';
   }
+
+  bool isDateSelected() {
+    return to != null;
+  }
 }

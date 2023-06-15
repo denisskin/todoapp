@@ -31,7 +31,7 @@ class _TaskPageState extends State<TaskPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close),
           onPressed: close,
         ),
         actions: [
@@ -39,81 +39,132 @@ class _TaskPageState extends State<TaskPage> {
             onPressed: saveEnabled ? save : null,
             child: Text(
               'СОХРАНИТЬ',
-              style: TextStyle(
-                color: MyTheme.colorBlue,
-                fontSize: 16.0,
-              ),
+              style: MyTheme.textAppbarPrimaryButton,
             ),
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
+      body: SafeArea(
         child: ListView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           children: [
-            TextFormField(
-              initialValue: task.title,
-              maxLines: 5,
-              decoration: InputDecoration(
-                hintText: 'Что надо сделать...',
-                filled: true,
-                fillColor: MyTheme.colorWhite,
-                // border: OutlineInputBorder(
-                //   borderRadius: BorderRadius.circular(10.0),
-                // ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //------ text field -------
+                  Material(
+                    elevation: 3.0,
+                    borderRadius: BorderRadius.circular(8),
+                    child: TextFormField(
+                      initialValue: task.title,
+                      onChanged: (v) => setState(() {
+                        task.title = v;
+                      }),
+                      autofocus: true,
+                      style: AppTextStyles.regularBodyText,
+                      minLines: 4,
+                      maxLines: 50,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
+                        fillColor: MyTheme.backSecondary,
+                        filled: true,
+                        hintText: 'Что надо сделать…',
+                        hintStyle: AppTextStyles.regularHintText,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 28),
+
+                  //------ priority --------
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Важность', style: AppTextStyles.regularBodyText),
+                      DropdownButtonFormField<String>(
+                        style: AppTextStyles.smallBodyText,
+                        value: task.priority,
+                        onChanged: (v) => setState(() {
+                          task.priority = v!;
+                        }),
+                        hint: const Text('Важность'),
+                        decoration: const InputDecoration(
+                          border:
+                              UnderlineInputBorder(borderSide: BorderSide.none),
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                            value: '',
+                            child: Text('Нет'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'low',
+                            child: Text('Низкий'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'high',
+                            child: Text('!! Высокий',
+                                style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  _separator,
+                ],
               ),
-              validator: (v) => v!.isEmpty ? 'Пожалуйста, введите текст' : null,
-              onChanged: (v) => setState(() {
-                task.title = v;
-              }),
             ),
-            // CheckboxListTile(
-            //   title: const Text('Done'),
-            //   value: task.completed,
-            //   onChanged: (v) => setState(() {
-            //     task.completed = v!;
-            //   }),
-            // ),
+
+            //------ data picker ---------
             ListTile(
               title: const Text('Сделать до'),
-              subtitle:
-                  Text(task.to != null ? task.to.toString() : 'Выберите дату'),
-              trailing: const Icon(Icons.calendar_today),
               onTap: () => _selectDate(context),
+              subtitle: task.isDateSelected()
+                  ? Text(task.to.toString(),
+                      style: const TextStyle(color: MyTheme.colorBlue))
+                  : Text('Выберите дату'),
+              trailing: Switch(
+                activeColor: MyTheme.colorBlue,
+                value: task.isDateSelected(),
+                onChanged: (v) => v ? _selectDate(context) : clearDate(),
+              ),
             ),
-            const Text('Важность'),
-            DropdownButtonFormField<String>(
-              value: task.priority,
-              onChanged: (v) => setState(() {
-                task.priority = v!;
-              }),
-              hint: const Text('Важность'),
-              items: const [
-                DropdownMenuItem(
-                  value: '',
-                  child: Text('Нет'),
-                ),
-                DropdownMenuItem(
-                  value: 'low',
-                  child: Text('Низкий'),
-                ),
-                DropdownMenuItem(
-                  value: 'high',
-                  child: Text('!! Высокий'),
-                  //, style: TextStyle(color: Colors.red)
-                ),
-              ],
-            ),
-            TextButton.icon(
-              icon: const Icon(Icons.delete),
-              label: const Text('Удалить'),
+
+            //--- separator ---
+            const SizedBox(height: 12),
+            _separator,
+            const SizedBox(height: 12),
+
+            //--- delete button ---
+            TextButton(
               onPressed: removeEnabled ? delete : null,
+              style: TextButton.styleFrom(
+                foregroundColor: MyTheme.colorRed,
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.delete),
+                  SizedBox(width: 16),
+                  Text('Удалить'),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
+  static const _separator = ColoredBox(
+    color: MyTheme.supportSeparator,
+    child: SizedBox(height: 1, width: double.infinity),
+  );
 
   save() {
     DB.tasks.update(task);
@@ -129,6 +180,12 @@ class _TaskPageState extends State<TaskPage> {
     Navigator.of(context).pop();
   }
 
+  clearDate() {
+    setState(() {
+      task.to = null;
+    });
+  }
+
   _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
       context: context,
@@ -140,4 +197,19 @@ class _TaskPageState extends State<TaskPage> {
       task.to = picked;
     });
   }
+}
+
+Widget _padding(double v, h, Widget child) {
+  return Padding(
+    padding: EdgeInsets.fromLTRB(v, h, v, h),
+    child: child,
+  );
+}
+
+Widget _margin(double v, h, Widget child) {
+  return Container(
+    // padding: EdgeInsets.fromLTRB(v, h, v, h),
+    margin: EdgeInsets.fromLTRB(v, h, v, h),
+    child: child,
+  );
 }
