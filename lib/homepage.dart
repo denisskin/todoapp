@@ -17,38 +17,19 @@ class _HomePageState extends State<HomePage> {
     final tasks = fViewAll ? DB.tasks.listAll() : DB.tasks.listCurrent();
 
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      //   title: Text('Мои дела (${DB.tasks.countCompleted()})'),
-      //   centerTitle: false,
-      //   actions: [
-      //     IconButton(
-      //       icon:
-      //           Icon(fViewAll ? Icons.visibility_sharp : Icons.visibility_off),
-      //       onPressed: () => setState(() {
-      //         fViewAll = !fViewAll;
-      //       }),
-      //     ),
-      //   ],
-      // ),
-      // body: ListView.builder(
-      //   itemCount: tasks.length,
-      //   itemBuilder: (ctx, i) => _itemTile(ctx, tasks[i]!),
-      // ),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 120,
-            // collapsedHeight: 50,
-            // backgroundColor: TodoElementsColor.getBackPrimaryColor(context),
+            backgroundColor: AppTheme.backPrimary,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text('Мои дела', style: MyTheme.textAppBar),
+              title: Text('Мои дела', style: AppTheme.textAppBar),
               centerTitle: false,
             ),
             actions: [
               IconButton(
-                icon: fViewAll ? MyTheme.iconViewAll : MyTheme.iconView,
+                icon: fViewAll ? AppTheme.iconViewAll : AppTheme.iconView,
                 onPressed: () => setState(() {
                   fViewAll = !fViewAll;
                 }),
@@ -63,13 +44,13 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                     padding: const EdgeInsets.fromLTRB(73, 0, 0, 0),
                     child: Text('Выполнено – ${DB.tasks.countCompleted()}',
-                        style: MyTheme.textDone)),
+                        style: AppTheme.textDone)),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 40.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: MyTheme.colorWhite,
-                      border: Border.all(color: MyTheme.colorWhite),
+                      color: AppTheme.colorWhite,
+                      border: Border.all(color: AppTheme.colorWhite),
                       borderRadius: const BorderRadius.all(
                         Radius.circular(12),
                       ),
@@ -107,7 +88,7 @@ class _HomePageState extends State<HomePage> {
     return Dismissible(
       key: Key('${task.id}'),
       background: Container(
-        color: MyTheme.colorGreen,
+        color: AppTheme.colorGreen,
         child: const Align(
           alignment: Alignment.centerLeft,
           child: Row(
@@ -153,8 +134,8 @@ class _HomePageState extends State<HomePage> {
                 child: Checkbox(
                   value: task.completed,
                   onChanged: (v) => setTaskComplete(task, v!),
-                  activeColor: MyTheme.colorGreen,
-                  side: task.isHighPriority() ? MyTheme.cbxHighBorder : null,
+                  activeColor: AppTheme.colorGreen,
+                  side: task.isHighPriority() ? AppTheme.cbxHighBorder : null,
                 ),
               ),
               const SizedBox(width: 14),
@@ -165,8 +146,8 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       task.title,
                       style: task.completed
-                          ? MyTheme.itemCompletedTextStyle
-                          : MyTheme.itemRegularTextStyle,
+                          ? AppTheme.itemCompletedTextStyle
+                          : AppTheme.itemRegularTextStyle,
                     ),
                     // if (isDateSetted && !isTaskCompleted)
                     //   Text('дата', style: dateTextStyle),
@@ -179,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                 height: 30,
                 child: Icon(
                   Icons.info_outline,
-                  color: MyTheme.labelTertiary,
+                  color: AppTheme.labelTertiary,
                   size: 27,
                 ),
               ),
@@ -201,7 +182,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () => openTask(context, 0),
               child: Text(
                 'Новое',
-                style: MyTheme.buttonNewTask,
+                style: AppTheme.buttonNewTask,
               ),
             ),
           ),

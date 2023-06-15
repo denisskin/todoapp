@@ -1,24 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppTheme {
-  final infoIconColor = const Color(0x33000000);
-
-  static final AppTheme themeLight = AppTheme();
-  static final AppTheme themeDark = AppThemeDark();
-
-  static AppTheme of(BuildContext context) {
-    //final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return isDark ? themeDark : themeLight;
-  }
-}
-
-class AppThemeDark extends AppTheme {
-  final infoIconColor = const Color(0x33000000);
-}
-
-abstract class MyTheme {
+abstract class AppTheme {
   static const supportSeparator = Color(0x33000000);
   static const supportOverlay = Color(0x0F000000);
 
@@ -43,7 +26,6 @@ abstract class MyTheme {
   static final lightAppTheme = ThemeData(
     brightness: Brightness.light,
     colorSchemeSeed: backPrimary,
-    // useMaterial3: true,
     appBarTheme: const AppBarTheme(
       backgroundColor: backPrimary,
       foregroundColor: labelPrimary,
@@ -59,7 +41,6 @@ abstract class MyTheme {
   static final darkAppTheme = ThemeData(
     brightness: Brightness.dark,
     colorSchemeSeed: DarkThemeColors.backSecondary,
-    useMaterial3: true,
     appBarTheme: const AppBarTheme(
       backgroundColor: DarkThemeColors.backPrimary,
     ),
@@ -91,7 +72,7 @@ abstract class MyTheme {
   );
 
   static const textAppbarPrimaryButton = TextStyle(
-    color: MyTheme.colorBlue,
+    color: AppTheme.colorBlue,
     fontSize: 16,
   );
 
@@ -157,7 +138,7 @@ abstract class AppTextStyles {
   static TextStyle regularHintText = GoogleFonts.roboto(
     fontSize: 16,
     fontWeight: FontWeight.w400,
-    color: MyTheme.labelTertiary,
+    color: AppTheme.labelTertiary,
   );
 
   static TextStyle smallBodyText = GoogleFonts.roboto(

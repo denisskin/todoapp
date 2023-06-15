@@ -39,7 +39,7 @@ class _TaskPageState extends State<TaskPage> {
             onPressed: saveEnabled ? save : null,
             child: Text(
               'СОХРАНИТЬ',
-              style: MyTheme.textAppbarPrimaryButton,
+              style: AppTheme.textAppbarPrimaryButton,
             ),
           ),
         ],
@@ -71,7 +71,7 @@ class _TaskPageState extends State<TaskPage> {
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide.none,
                         ),
-                        fillColor: MyTheme.backSecondary,
+                        fillColor: AppTheme.backSecondary,
                         filled: true,
                         hintText: 'Что надо сделать…',
                         hintStyle: AppTextStyles.regularHintText,
@@ -127,10 +127,10 @@ class _TaskPageState extends State<TaskPage> {
               onTap: () => _selectDate(context),
               subtitle: task.isDateSelected()
                   ? Text(task.to.toString(),
-                      style: const TextStyle(color: MyTheme.colorBlue))
+                      style: const TextStyle(color: AppTheme.colorBlue))
                   : Text('Выберите дату'),
               trailing: Switch(
-                activeColor: MyTheme.colorBlue,
+                activeColor: AppTheme.colorBlue,
                 value: task.isDateSelected(),
                 onChanged: (v) => v ? _selectDate(context) : clearDate(),
               ),
@@ -145,7 +145,7 @@ class _TaskPageState extends State<TaskPage> {
             TextButton(
               onPressed: removeEnabled ? delete : null,
               style: TextButton.styleFrom(
-                foregroundColor: MyTheme.colorRed,
+                foregroundColor: AppTheme.colorRed,
               ),
               child: const Row(
                 children: [
@@ -162,7 +162,7 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   static const _separator = ColoredBox(
-    color: MyTheme.supportSeparator,
+    color: AppTheme.supportSeparator,
     child: SizedBox(height: 1, width: double.infinity),
   );
 

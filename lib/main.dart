@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Ya To Do App',
 
-      theme: MyTheme.lightAppTheme,
+      theme: AppTheme.lightAppTheme,
       // darkTheme: MyTheme.darkAppTheme,
       initialRoute: '/',
       routes: {
