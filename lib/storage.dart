@@ -34,16 +34,13 @@ class Storage {
 
   Task getTaskByID(int id) {
     final i = _taskIdx(id);
-    if (i >= 0) return _tasks[i]!;
+    if (i >= 0) return _tasks[i]!.copy();
     return Task(id: id);
   }
 
   int addTask() {
     final id = (_tasks.last?.id ?? 0) + 1;
-    _tasks.add(Task(
-      id: id,
-      title: '',
-    ));
+    _tasks.add(Task(id: id));
     return id;
   }
 

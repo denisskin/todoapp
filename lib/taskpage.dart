@@ -22,7 +22,7 @@ class _TaskPageState extends State<TaskPage> {
   void initState() {
     super.initState();
 
-    task = widget.store.getTaskByID(widget.id).copy();
+    task = widget.store.getTaskByID(widget.id);
   }
 
   bool get saveEnabled => task.title.isNotEmpty;

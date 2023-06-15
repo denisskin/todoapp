@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'TODO Application',
+      title: 'Ya To Do App',
       theme: appTheme(context),
       initialRoute: '/',
       routes: {

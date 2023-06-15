@@ -54,9 +54,9 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Add task',
+        tooltip: 'Добавить новое',
         child: const Icon(Icons.add),
-        onPressed: () => addTask(context),
+        onPressed: () => openTask(context, 0),
       ),
     );
   }
@@ -64,10 +64,5 @@ class _HomePageState extends State<HomePage> {
   openTask(BuildContext context, int id) async {
     await Navigator.of(context).pushNamed('/task', arguments: id);
     setState(() {});
-  }
-
-  addTask(BuildContext context) async {
-    final id = widget.store.addTask();
-    openTask(context, id);
   }
 }
