@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todoapp/db.dart';
+import 'package:todoapp/task.dart';
 import 'package:todoapp/theme.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,6 +12,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool fViewAll = false;
+
+  _HomePageState() {
+    DB.tasks.onUpdate(() => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +84,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Добавить',
         child: const Icon(Icons.add),
-        onPressed: () => openTask(context, 0),
+        onPressed: () => openTask(context),
       ),
     );
   }
@@ -122,7 +127,7 @@ class _HomePageState extends State<HomePage> {
         return false;
       },
       child: InkWell(
-        onTap: () => openTask(context, task.id),
+        onTap: () => openTask(context, id: task.id),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
           child: Row(
@@ -132,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                 width: 30,
                 height: 30,
                 child: Checkbox(
-                  value: task.completed,
+                  value: task.done,
                   onChanged: (v) => setTaskComplete(task, v!),
                   activeColor: AppTheme.colorGreen,
                   side: task.isHighPriority() ? AppTheme.cbxHighBorder : null,
@@ -145,13 +150,13 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     const SizedBox(height: 4),
                     Text(
-                      task.title,
-                      style: task.completed
+                      task.text,
+                      style: task.done
                           ? AppTheme.itemCompletedTextStyle
                           : AppTheme.itemRegularTextStyle,
                     ),
-                    if (task.isDateSelected())
-                      Text(task.localDateString(),
+                    if (task.isDeadlineSelected())
+                      Text(task.deadlineString(),
                           style: AppTheme.smallSecondaryText),
                   ],
                 ),
@@ -180,7 +185,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: () => openTask(context, 0),
+              onTap: () => openTask(context),
               child: Text(
                 'Новое',
                 style: AppTheme.buttonNewTask,
@@ -192,19 +197,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  openTask(BuildContext context, int id) async {
+  openTask(BuildContext context, {String id = ''}) async {
     await Navigator.of(context).pushNamed('/task', arguments: id);
     setState(() {});
   }
 
   setTaskComplete(Task task, bool f) {
     setState(() {
-      task.completed = f;
+      task.done = f;
       DB.tasks.update(task);
     });
   }
 
-  removeTask(int id) {
+  removeTask(String id) {
     setState(() {
       DB.tasks.remove(id);
     });

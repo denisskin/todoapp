@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:todoapp/db.dart';
+import 'package:todoapp/task.dart';
 import 'package:todoapp/theme.dart';
 
 class TaskPage extends StatefulWidget {
-  final int id;
+  final String id;
 
   const TaskPage({
     super.key,
@@ -23,11 +24,14 @@ class _TaskPageState extends State<TaskPage> {
     task = DB.tasks.get(widget.id);
   }
 
-  bool get saveEnabled => task.title.isNotEmpty;
-  bool get removeEnabled => task.id != 0;
+  bool get saveEnabled => task.text.isNotEmpty;
+  bool get removeEnabled => !task.isNew();
 
   @override
   Widget build(BuildContext context) {
+    final importance =
+        task.importance != '' ? task.importance : Task.importanceBasic;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -58,9 +62,9 @@ class _TaskPageState extends State<TaskPage> {
                     elevation: 3.0,
                     borderRadius: BorderRadius.circular(8),
                     child: TextFormField(
-                      initialValue: task.title,
+                      initialValue: task.text,
                       onChanged: (v) => setState(() {
-                        task.title = v;
+                        task.text = v;
                       }),
                       autofocus: true,
                       style: AppTheme.regularBodyText,
@@ -88,9 +92,9 @@ class _TaskPageState extends State<TaskPage> {
                       Text('Важность', style: AppTheme.regularBodyText),
                       DropdownButtonFormField<String>(
                         style: AppTheme.smallBodyText,
-                        value: task.priority,
+                        value: importance,
                         onChanged: (v) => setState(() {
-                          task.priority = v!;
+                          task.importance = v!;
                         }),
                         hint: const Text('Важность'),
                         decoration: const InputDecoration(
@@ -99,15 +103,15 @@ class _TaskPageState extends State<TaskPage> {
                         ),
                         items: const [
                           DropdownMenuItem(
-                            value: '',
+                            value: Task.importanceBasic,
                             child: Text('Нет'),
                           ),
                           DropdownMenuItem(
-                            value: 'low',
+                            value: Task.importanceLow,
                             child: Text('Низкий'),
                           ),
                           DropdownMenuItem(
-                            value: 'high',
+                            value: Task.importanceImportant,
                             child: Text('!! Высокий',
                                 style: TextStyle(color: Colors.red)),
                           ),
@@ -125,13 +129,13 @@ class _TaskPageState extends State<TaskPage> {
             ListTile(
               title: const Text('Сделать до'),
               onTap: () => _selectDate(context),
-              subtitle: task.isDateSelected()
-                  ? Text(task.localDateString(),
+              subtitle: task.isDeadlineSelected()
+                  ? Text(task.deadlineString(),
                       style: const TextStyle(color: AppTheme.colorBlue))
                   : const Text('Выберите дату'),
               trailing: Switch(
                 activeColor: AppTheme.colorBlue,
-                value: task.isDateSelected(),
+                value: task.isDeadlineSelected(),
                 onChanged: (v) => v ? _selectDate(context) : clearDate(),
               ),
             ),
@@ -182,34 +186,19 @@ class _TaskPageState extends State<TaskPage> {
 
   clearDate() {
     setState(() {
-      task.to = null;
+      task.deadline = null;
     });
   }
 
   _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: task.to ?? DateTime.now(),
-      firstDate: DateTime.now(),
+      initialDate: task.deadline ?? DateTime.now(),
+      firstDate: DateTime(1900),
       lastDate: DateTime(2100),
     );
     setState(() {
-      task.to = picked;
+      task.deadline = picked;
     });
   }
-}
-
-Widget _padding(double v, h, Widget child) {
-  return Padding(
-    padding: EdgeInsets.fromLTRB(v, h, v, h),
-    child: child,
-  );
-}
-
-Widget _margin(double v, h, Widget child) {
-  return Container(
-    // padding: EdgeInsets.fromLTRB(v, h, v, h),
-    margin: EdgeInsets.fromLTRB(v, h, v, h),
-    child: child,
-  );
 }

@@ -1,27 +1,33 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todoapp/api.dart';
+import 'package:todoapp/task.dart';
+import 'package:todoapp/utils.dart';
+
 abstract class DB {
   static final tasks = TasksDB();
 }
 
 class TasksDB {
-  final rows = <Task?>[
-    Task(id: 1, title: 'Купить молока', completed: true),
-    Task(id: 2, title: 'Купить квартиру в Москве', priority: 'low'),
-    Task(id: 3, title: 'Сходить в спортзал', completed: true),
-    Task(id: 4, title: 'Наконец-то уже дочитать Атлант расправил плечи'),
-    Task(id: 5, title: 'Найти девушку с зп 300к руб.', priority: 'high'),
-    Task(id: 6, title: 'Найти персонажа Марио в реале', priority: 'low'),
-    Task(id: 7, title: 'Сгенерировать роман больше чем Атлант расправил плечи'),
-    Task(id: 8, title: 'Перезагрузить кофеварку без ошибок', completed: true),
-    Task(id: 9, title: 'Исправить опечатку в бессмысленном комментарии'),
-    Task(id: 10, title: 'Сходить в спортзал без перерыва на пиццу'),
-    Task(id: 11, title: 'Создать приложение, которое покупает молоко'),
-    Task(id: 12, title: 'Научиться программировать с закрытыми глазами'),
-    Task(id: 13, title: 'Запустить скайнет и поработить мир', priority: 'low'),
-    Task(id: 14, title: 'Прокачать свой Тиндер-акк', priority: 'high'),
-  ];
+  int rev = 0;
+  List<Task?> rows = [];
+  final api = ApiClient();
+  final deviceId = uniqueId();
 
   TasksDB() {
-    // todo: load tasks from persistent storage or by network
+    _initData();
+  }
+
+  _initData() async {
+    rows = await _tasksFromDisk();
+    rev++;
+    final apiRows = await api.getTasks();
+    if (api.revision > (await _fsRevision())) {
+      rows = apiRows;
+      _flush();
+    }
   }
 
   List<Task?> listAll() {
@@ -32,7 +38,7 @@ class TasksDB {
     // select uncompleted tasks only
     final arr = <Task?>[];
     for (var task in rows) {
-      if (!task!.completed) arr.add(task);
+      if (!task!.done) arr.add(task);
     }
     return arr;
   }
@@ -40,74 +46,73 @@ class TasksDB {
   int countCompleted() {
     int n = 0;
     for (var task in rows) {
-      if (task!.completed) n++;
+      if (task!.done) n++;
     }
     return n;
   }
 
-  Task get(int id) {
+  Task get(String id) {
     final i = _idx(id);
     if (i >= 0) return rows[i]!.copy();
-    return Task(id: id);
+    return Task();
   }
 
-  int add() {
-    final id = (rows.last?.id ?? 0) + 1;
-    rows.add(Task(id: id));
-    return id;
+  update(Task task) async {
+    task.refreshUpdateTime();
+    if (task.isNew()) {
+      task.id = uniqueId(); // set id
+      task.lastUpdatedBy = deviceId;
+      rows.add(task);
+    } else {
+      rows[_idx(task.id)] = task;
+    }
+    _flush();
   }
 
-  update(Task task) {
-    if (task.id == 0) task.id = add();
-    rows[_idx(task.id)] = task;
+  remove(String id) async {
+    rows.removeAt(_idx(id));
+    _flush();
   }
 
-  remove(int id) {
-    if (id != 0) rows.removeAt(_idx(id));
-  }
-
-  int _idx(int id) {
+  int _idx(String id) {
     for (int i = 0; i < rows.length; i++) {
       if (rows[i]!.id == id) return i;
     }
     return -1;
   }
-}
 
-class Task {
-  int id;
-  String title;
-  bool completed;
-  DateTime? to;
-  String priority;
-
-  Task({
-    this.id = 0,
-    this.title = '',
-    this.completed = false,
-    this.priority = '',
-    this.to,
-  });
-
-  Task copy() {
-    return Task(
-      id: id,
-      title: title,
-      completed: completed,
-      to: to,
-      priority: priority,
-    );
+  onUpdate(void callback()) async {
+    int r = rev;
+    const duration = Duration(milliseconds: 300);
+    Timer.periodic(duration, (_) {
+      if (r != rev) {
+        r = rev;
+        callback();
+      }
+    });
   }
 
-  String localDateString() {
-    return to!.toString().substring(0, 10);
+  _flush() async {
+    await _saveToDisk('tasks', rows);
+    rows = await api.updateTasks(rows);
+    rev++;
+    await _saveToDisk('tasks.rev', api.revision);
   }
 
-  bool isHighPriority() {
-    return priority == 'high';
+  static Future<int> _fsRevision() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('tasks.rev') ?? 0;
   }
 
-  bool isDateSelected() {
-    return to != null;
+  static Future<List<Task?>> _tasksFromDisk() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? value = prefs.getString('tasks');
+    if (value == null) return [];
+    return Task.listFromJson(jsonDecode(value) as List<dynamic>);
+  }
+
+  static Future<void> _saveToDisk(String key, Object obj) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(key, jsonEncode(obj));
   }
 }

@@ -27,6 +27,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-int routeArg(BuildContext context) {
-  return (ModalRoute.of(context)?.settings.arguments ?? 0) as int;
+String routeArg(BuildContext context) {
+  return (ModalRoute.of(context)?.settings.arguments ?? '') as String;
 }
