@@ -11,22 +11,29 @@ abstract class DB {
 }
 
 class TasksDB {
-  int rev = 0;
   List<Task?> rows = [];
+
   final api = ApiClient();
   final deviceId = uniqueId();
+  final List<Function> subscriptions = [];
 
   TasksDB() {
     _initData();
   }
 
   _initData() async {
-    rows = await _tasksFromDisk();
-    rev++;
-    final apiRows = await api.getTasks();
-    if (api.revision > (await _fsRevision())) {
-      rows = apiRows;
+    _setData(await _tasksFromDisk());
+    final apiData = await api.getTasks();
+    if (api.revision > await _fsRevision()) {
+      _setData(apiData);
       _flush();
+    }
+  }
+
+  _setData(List<Task?> data) {
+    rows = data;
+    for (var fn in subscriptions) {
+      fn();
     }
   }
 
@@ -81,21 +88,13 @@ class TasksDB {
     return -1;
   }
 
-  onUpdate(void callback()) async {
-    int r = rev;
-    const duration = Duration(milliseconds: 300);
-    Timer.periodic(duration, (_) {
-      if (r != rev) {
-        r = rev;
-        callback();
-      }
-    });
+  subscribe(Function callback) {
+    subscriptions.add(callback);
   }
 
   _flush() async {
     await _saveToDisk('tasks', rows);
-    rows = await api.updateTasks(rows);
-    rev++;
+    _setData(await api.updateTasks(rows));
     await _saveToDisk('tasks.rev', api.revision);
   }
 

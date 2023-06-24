@@ -55,9 +55,8 @@ class ApiClient {
     req.headers.set("content-type", "application/json; charset=utf-8");
     req.headers.add("authorization", _authKey);
     req.headers.add("X-Last-Known-Revision", revision);
-    Log.l.i('API> *** REQ-HEADERS:\n${req.headers.toString()}');
+    Log.l.d('API> *** REQUEST-HEADERS:\n${req.headers.toString()}');
     if (body != Null) {
-      //Log.l.i('-REQ-BODY: ${jsonEncode(body)}');
       req.write(jsonEncode(body));
     }
     final resp = await req.close();
@@ -66,8 +65,7 @@ class ApiClient {
       throw 'http-error: http-status is ${resp.statusCode}';
     }
     final cont = await (resp.transform(utf8.decoder)).join();
-    Log.l.i('API> RESP-BODY: $cont\n');
-    //Log.l.i("<<<<<<<<<<<<<<<<<<<<<<<\n");
+    Log.l.d('API> RESPONSE-BODY: $cont\n');
 
     final data = jsonDecode(cont) as Map<String, dynamic>;
     if (data["status"] != "ok") {
