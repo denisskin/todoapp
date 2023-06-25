@@ -10,4 +10,4 @@ This project is a starting point for a Flutter application.
 
 ## Ссылка на загрузку .apk:
 
-[Скачать](dist/app-release.apk)
+[Скачать](https://github.com/denisskin/todoapp/raw/master/dist/app-release.apk)
