@@ -1,11 +1,5 @@
 import 'dart:math';
 
-import 'package:logger/logger.dart';
-
-class Log {
-  static final l = Logger();
-}
-
 String uniqueId() {
   final seed = DateTime.now().microsecondsSinceEpoch;
   return Random(seed).nextInt(0xffffff).toRadixString(16);

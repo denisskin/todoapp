@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todoapp/api.dart';
-import 'package:todoapp/task.dart';
-import 'package:todoapp/utils.dart';
+import 'package:todoapp/api/api.dart';
+import 'package:todoapp/providers/models/task.dart';
+import 'package:todoapp/utils/utils.dart';
 
 abstract class DB {
   static final tasks = TasksDB();

@@ -1,4 +1,4 @@
-import 'package:todoapp/utils.dart';
+import 'package:todoapp/utils/utils.dart';
 
 class Task {
   String id;

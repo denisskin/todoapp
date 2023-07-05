@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:todoapp/task.dart';
-import 'package:todoapp/utils.dart';
+import 'package:todoapp/providers/models/task.dart';
+import 'package:todoapp/utils/logger.dart';
 
 class ApiClient {
   static const _baseUrl = 'https://beta.mrdekk.ru/todobackend';
