@@ -7,12 +7,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:todoapp/main.dart';
+import 'package:todoapp/pages/app.dart';
 
 void main() {
   testWidgets('Add new task smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(const MyApp());
 
     // Verify that the task existed.
     expect(find.text('Покупки'), findsOneWidget);
