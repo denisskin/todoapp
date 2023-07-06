@@ -62,6 +62,7 @@ class _TaskPageState extends State<TaskPage> {
                     elevation: 3.0,
                     borderRadius: BorderRadius.circular(8),
                     child: TextFormField(
+                      key: const Key('inputBox'),
                       initialValue: task.text,
                       onChanged: (v) => setState(() {
                         task.text = v;
