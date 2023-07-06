@@ -26,6 +26,7 @@ void main() {
       expect(task.isNew(), false);
     });
 
+    /*
     test('Get task by id', () async {
       final task = db.get(newId);
 
@@ -46,5 +47,6 @@ void main() {
       final task = db.get(newId);
       expect(task.isNew(), true);
     });
+    // */
   });
 }

@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todoapp/providers/models/task.dart';
-import 'package:todoapp/utils/logger.dart';
 
 abstract class DB {
   static final tasks = TasksDB();
@@ -90,7 +89,7 @@ class TasksDB {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_dbKey, jsonEncode(_rows));
     } catch (e) {
-      Log.l.e('db> _flush-error: ${e.toString()}');
+      //Log.l.d('db> _flush-error: ${e.toString()}');
     }
 
     for (var fn in _subscriptions) {
@@ -105,7 +104,7 @@ class TasksDB {
       if (value == null) return [];
       return Task.listFromJson(jsonDecode(value) as List<dynamic>);
     } catch (e) {
-      Log.l.e('db> _loadFromDisk-error: ${e.toString()}');
+      //Log.l.d('db> _loadFromDisk-error: ${e.toString()}');
       return [];
     }
   }

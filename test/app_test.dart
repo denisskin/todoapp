@@ -13,16 +13,19 @@ void main() {
   testWidgets('Add new task smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
 
-    // Verify that the task existed.
-    expect(find.text('Покупки'), findsOneWidget);
-    expect(find.text('New #4'), findsNothing);
+    // Homepage. Verify that the header and button existed.
+    expect(find.text('Мои дела'), findsOneWidget);
+    expect(find.text('Новое'), findsOneWidget);
+    expect(find.byIcon(Icons.add), findsOneWidget);
 
     // Tap the '+' icon and trigger a frame.
     await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
-    // Verify that added new task to TODO-list.
-    expect(find.text('New #4'), findsOneWidget);
+    // Verify that opened new task page.
+    expect(find.text('СОХРАНИТЬ'), findsOneWidget);
+    expect(find.text('Удалить'), findsOneWidget);
   });
 }
