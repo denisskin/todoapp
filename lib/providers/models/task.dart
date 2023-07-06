@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:todoapp/utils/device.dart';
 import 'package:todoapp/utils/utils.dart';
 
 class Task {
@@ -26,16 +29,6 @@ class Task {
     this.changedAt = 0,
     this.lastUpdatedBy = '',
   });
-
-  // static Task newTask(String deviceId) {
-  //   final ts = toUnix(DateTime.now());
-  //   return Task(
-  //     id: uniqueId(),
-  //     createdAt: ts,
-  //     changedAt: ts,
-  //     lastUpdatedBy: deviceId,
-  //   );
-  // }
 
   Task copy() {
     return Task(
@@ -87,6 +80,14 @@ class Task {
     return tt;
   }
 
+  static int dataVersion(List<Task?> tasks) {
+    int v = 0;
+    for (final row in tasks) {
+      v = max(v, row?.changedAt ?? 0);
+    }
+    return v;
+  }
+
   bool isNew() {
     return id == '';
   }
@@ -103,10 +104,14 @@ class Task {
     return deadline != null;
   }
 
-  refreshUpdateTime() {
+  refreshTime() async {
     changedAt = toUnix(DateTime.now());
     if (createdAt == 0) {
       createdAt = changedAt;
+    }
+    if (isNew()) {
+      id = uniqueId(); // set id
+      lastUpdatedBy = await Device.getId();
     }
   }
 }

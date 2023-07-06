@@ -2,10 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todoapp/api/api.dart';
 import 'package:todoapp/providers/models/task.dart';
-import 'package:todoapp/utils/device.dart';
-import 'package:todoapp/utils/utils.dart';
 
 abstract class DB {
   static final tasks = TasksDB();
@@ -14,27 +11,15 @@ abstract class DB {
 class TasksDB {
   List<Task?> _rows = [];
 
-  final api = ApiClient();
-  final List<Function> subscriptions = [];
+  // subscriptions on data update
+  final List<Function> _subscriptions = [];
 
   TasksDB() {
     _initData();
   }
 
   _initData() async {
-    _setData(await _tasksFromDisk());
-    final apiData = await api.getTasks();
-    if (api.revision > await _fsRevision()) {
-      _setData(apiData);
-      _flush();
-    }
-  }
-
-  _setData(List<Task?> data) {
-    _rows = data;
-    for (var fn in subscriptions) {
-      fn();
-    }
+    setData(await _loadFromDisk());
   }
 
   List<Task?> listAll() {
@@ -64,14 +49,18 @@ class TasksDB {
     return Task();
   }
 
+  setData(List<Task?> rows) {
+    _rows = rows;
+    _flush();
+  }
+
   update(Task task) async {
-    task.refreshUpdateTime();
-    if (task.isNew()) {
-      task.id = uniqueId(); // set id
-      task.lastUpdatedBy = await Device.getId();
+    await task.refreshTime();
+    final i = _idx(task.id);
+    if (i == -1) {
       _rows.add(task);
     } else {
-      _rows[_idx(task.id)] = task;
+      _rows[i] = task;
     }
     _flush();
   }
@@ -81,6 +70,10 @@ class TasksDB {
     _flush();
   }
 
+  onUpdate(Function callback) {
+    _subscriptions.add(callback);
+  }
+
   int _idx(String id) {
     for (int i = 0; i < _rows.length; i++) {
       if (_rows[i]!.id == id) return i;
@@ -88,30 +81,22 @@ class TasksDB {
     return -1;
   }
 
-  subscribe(Function callback) {
-    subscriptions.add(callback);
-  }
+  static const _dbKey = 'tasks';
 
   _flush() async {
-    await _saveToDisk('tasks', _rows);
-    _setData(await api.updateTasks(_rows));
-    await _saveToDisk('tasks.rev', api.revision);
+    // save data to disk
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_dbKey, jsonEncode(_rows));
+
+    for (var fn in _subscriptions) {
+      fn();
+    }
   }
 
-  static Future<int> _fsRevision() async {
+  Future<List<Task?>> _loadFromDisk() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('tasks.rev') ?? 0;
-  }
-
-  static Future<List<Task?>> _tasksFromDisk() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? value = prefs.getString('tasks');
+    String? value = prefs.getString(_dbKey);
     if (value == null) return [];
     return Task.listFromJson(jsonDecode(value) as List<dynamic>);
-  }
-
-  static Future<void> _saveToDisk(String key, Object obj) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(key, jsonEncode(obj));
   }
 }

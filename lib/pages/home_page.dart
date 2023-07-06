@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   bool fViewAll = false;
 
   _HomePageState() {
-    DB.tasks.subscribe(() => setState(() {}));
+    DB.tasks.onUpdate(() => setState(() {}));
   }
 
   @override
