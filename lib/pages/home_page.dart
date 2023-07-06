@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _itemTile(BuildContext context, Task task) {
     return Dismissible(
-      key: Key('${task.id}'),
+      key: Key(task.id),
       background: Container(
         color: AppTheme.colorGreen,
         child: const Align(
