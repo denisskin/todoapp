@@ -12,18 +12,18 @@ void main() {
     final newTask = Task(id: newId, text: 'New Test Task');
 
     // actual tasks list
-    List<Task?> tasks = [];
-    Task? taskByID(String id) {
+    List<Task> tasks = [];
+    bool taskExists(String id) {
       for (final task in tasks) {
-        if (task?.id == id) return task;
+        if (task.id == id) return true;
       }
-      return null;
+      return false;
     }
 
     test('Get all records', () async {
       tasks = await client.getTasks();
       expect(tasks, isNotEmpty);
-      expect(taskByID(newId), isNull);
+      expect(taskExists(newId), false);
     });
 
     test('Put new Task', () async {
@@ -34,13 +34,13 @@ void main() {
     test('Refresh all records', () async {
       tasks = await client.getTasks();
       expect(tasks, isNotEmpty);
-      expect(taskByID(newId), isNotNull);
+      expect(taskExists(newId), true);
     });
 
     test('Delete task', () async {
       await client.deleteTask(newId);
       tasks = await client.getTasks();
-      expect(taskByID(newId), isNull);
+      expect(taskExists(newId), false);
     });
   });
 }
