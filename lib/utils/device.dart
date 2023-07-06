@@ -13,7 +13,9 @@ abstract class Device {
       } else if (Platform.isIOS) {
         return (await DeviceInfoPlugin().iosInfo).identifierForVendor ?? _uid;
       }
-    } finally {}
+    } catch (e) {
+      //
+    }
     return _uid;
   }
 }

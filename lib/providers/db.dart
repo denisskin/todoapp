@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todoapp/providers/models/task.dart';
+import 'package:todoapp/utils/logger.dart';
 
 abstract class DB {
   static final tasks = TasksDB();
@@ -84,9 +85,13 @@ class TasksDB {
   static const _dbKey = 'tasks';
 
   _flush() async {
-    // save data to disk
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_dbKey, jsonEncode(_rows));
+    try {
+      // save data to disk
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_dbKey, jsonEncode(_rows));
+    } catch (e) {
+      Log.l.e('db> _flush-error: ${e.toString()}');
+    }
 
     for (var fn in _subscriptions) {
       fn();
@@ -94,9 +99,14 @@ class TasksDB {
   }
 
   Future<List<Task>> _loadFromDisk() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? value = prefs.getString(_dbKey);
-    if (value == null) return [];
-    return Task.listFromJson(jsonDecode(value) as List<dynamic>);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? value = prefs.getString(_dbKey);
+      if (value == null) return [];
+      return Task.listFromJson(jsonDecode(value) as List<dynamic>);
+    } catch (e) {
+      Log.l.e('db> _loadFromDisk-error: ${e.toString()}');
+      return [];
+    }
   }
 }
