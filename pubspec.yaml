@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   logger: ^1.4.0
   shared_preferences: ^2.1.2
+  device_info_plus: ^9.0.2
 
 dev_dependencies:
   flutter_test:

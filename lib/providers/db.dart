@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todoapp/api/api.dart';
 import 'package:todoapp/providers/models/task.dart';
+import 'package:todoapp/utils/device.dart';
 import 'package:todoapp/utils/utils.dart';
 
 abstract class DB {
@@ -11,10 +12,9 @@ abstract class DB {
 }
 
 class TasksDB {
-  List<Task?> rows = [];
+  List<Task?> _rows = [];
 
   final api = ApiClient();
-  final deviceId = uniqueId();
   final List<Function> subscriptions = [];
 
   TasksDB() {
@@ -31,20 +31,20 @@ class TasksDB {
   }
 
   _setData(List<Task?> data) {
-    rows = data;
+    _rows = data;
     for (var fn in subscriptions) {
       fn();
     }
   }
 
   List<Task?> listAll() {
-    return rows;
+    return _rows;
   }
 
   List<Task?> listCurrent() {
     // select uncompleted tasks only
     final arr = <Task?>[];
-    for (var task in rows) {
+    for (var task in _rows) {
       if (!task!.done) arr.add(task);
     }
     return arr;
@@ -52,7 +52,7 @@ class TasksDB {
 
   int countCompleted() {
     int n = 0;
-    for (var task in rows) {
+    for (var task in _rows) {
       if (task!.done) n++;
     }
     return n;
@@ -60,7 +60,7 @@ class TasksDB {
 
   Task get(String id) {
     final i = _idx(id);
-    if (i >= 0) return rows[i]!.copy();
+    if (i >= 0) return _rows[i]!.copy();
     return Task();
   }
 
@@ -68,22 +68,22 @@ class TasksDB {
     task.refreshUpdateTime();
     if (task.isNew()) {
       task.id = uniqueId(); // set id
-      task.lastUpdatedBy = deviceId;
-      rows.add(task);
+      task.lastUpdatedBy = await Device.getId();
+      _rows.add(task);
     } else {
-      rows[_idx(task.id)] = task;
+      _rows[_idx(task.id)] = task;
     }
     _flush();
   }
 
   remove(String id) async {
-    rows.removeAt(_idx(id));
+    _rows.removeAt(_idx(id));
     _flush();
   }
 
   int _idx(String id) {
-    for (int i = 0; i < rows.length; i++) {
-      if (rows[i]!.id == id) return i;
+    for (int i = 0; i < _rows.length; i++) {
+      if (_rows[i]!.id == id) return i;
     }
     return -1;
   }
@@ -93,8 +93,8 @@ class TasksDB {
   }
 
   _flush() async {
-    await _saveToDisk('tasks', rows);
-    _setData(await api.updateTasks(rows));
+    await _saveToDisk('tasks', _rows);
+    _setData(await api.updateTasks(_rows));
     await _saveToDisk('tasks.rev', api.revision);
   }
 
