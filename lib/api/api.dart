@@ -11,12 +11,12 @@ class ApiClient {
   final client = HttpClient();
   int revision = 0;
 
-  Future<List<Task?>> getTasks() async {
+  Future<List<Task>> getTasks() async {
     final resp = await _request('/list');
     return Task.listFromJson(resp['list']);
   }
 
-  Future<List<Task?>> updateTasks(List<Task?> tasks) async {
+  Future<List<Task>> updateTasks(List<Task> tasks) async {
     final resp = await _request('/list', method: 'PATCH', body: {
       'status': 'ok',
       'list': tasks,

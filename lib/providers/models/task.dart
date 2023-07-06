@@ -72,18 +72,18 @@ class Task {
     );
   }
 
-  static List<Task?> listFromJson(List<dynamic> json) {
-    final tt = <Task?>[];
+  static List<Task> listFromJson(List<dynamic> json) {
+    final tt = <Task>[];
     for (var e in json) {
       tt.add(Task.fromJson(e));
     }
     return tt;
   }
 
-  static int dataVersion(List<Task?> tasks) {
+  static int dataVersion(List<Task> tasks) {
     int v = 0;
     for (final row in tasks) {
-      v = max(v, row?.changedAt ?? 0);
+      v = max(v, row.changedAt);
     }
     return v;
   }

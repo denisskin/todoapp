@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   bool fViewAll = false;
 
   _HomePageState() {
-    DB.tasks.onUpdate(() => setState(() {}));
+    DB.tasks.onUpdate(() async => setState(() {}));
   }
 
   @override
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
                           itemCount: tasks.length,
-                          itemBuilder: (ctx, i) => _itemTile(ctx, tasks[i]!),
+                          itemBuilder: (ctx, i) => _itemTile(ctx, tasks[i]),
                         ),
                         _newTaskListButton(context),
                       ],

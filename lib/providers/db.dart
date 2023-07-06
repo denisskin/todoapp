@@ -9,7 +9,7 @@ abstract class DB {
 }
 
 class TasksDB {
-  List<Task?> _rows = [];
+  List<Task> _rows = [];
 
   // subscriptions on data update
   final List<Function> _subscriptions = [];
@@ -22,15 +22,15 @@ class TasksDB {
     setData(await _loadFromDisk());
   }
 
-  List<Task?> listAll() {
+  List<Task> listAll() {
     return _rows;
   }
 
-  List<Task?> listCurrent() {
+  List<Task> listCurrent() {
     // select uncompleted tasks only
-    final arr = <Task?>[];
+    final arr = <Task>[];
     for (var task in _rows) {
-      if (!task!.done) arr.add(task);
+      if (!task.done) arr.add(task);
     }
     return arr;
   }
@@ -38,18 +38,18 @@ class TasksDB {
   int countCompleted() {
     int n = 0;
     for (var task in _rows) {
-      if (task!.done) n++;
+      if (task.done) n++;
     }
     return n;
   }
 
   Task get(String id) {
     final i = _idx(id);
-    if (i >= 0) return _rows[i]!.copy();
+    if (i >= 0) return _rows[i].copy();
     return Task();
   }
 
-  setData(List<Task?> rows) {
+  setData(List<Task> rows) {
     _rows = rows;
     _flush();
   }
@@ -76,7 +76,7 @@ class TasksDB {
 
   int _idx(String id) {
     for (int i = 0; i < _rows.length; i++) {
-      if (_rows[i]!.id == id) return i;
+      if (_rows[i].id == id) return i;
     }
     return -1;
   }
@@ -93,7 +93,7 @@ class TasksDB {
     }
   }
 
-  Future<List<Task?>> _loadFromDisk() async {
+  Future<List<Task>> _loadFromDisk() async {
     final prefs = await SharedPreferences.getInstance();
     String? value = prefs.getString(_dbKey);
     if (value == null) return [];
