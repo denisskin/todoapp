@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:todoapp/pages/app.dart';
+import 'package:todoapp/app/app.dart';
 
 void main() {
   testWidgets('Add and delete new task smoke test',
@@ -8,7 +8,7 @@ void main() {
     final newTaskText = 'Test Task at ${DateTime.now().toString()}';
 
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const App());
     await tester.pumpAndSettle();
 
     // Open Homepage.

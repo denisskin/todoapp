@@ -22,24 +22,29 @@ void main() {
 
     test('Get all records', () async {
       tasks = await client.getTasks();
+
       expect(tasks, isNotEmpty);
       expect(taskExists(newId), false);
     });
 
     test('Put new Task', () async {
-      final t = await client.putTask(newTask);
-      expect(t.toJson(), newTask.toJson());
+      final task = await client.putTask(newTask);
+
+      expect(task.toJson(), newTask.toJson());
     });
 
     test('Refresh all records', () async {
       tasks = await client.getTasks();
+
       expect(tasks, isNotEmpty);
       expect(taskExists(newId), true);
     });
 
     test('Delete task', () async {
-      await client.deleteTask(newId);
-      tasks = await client.getTasks();
+      final ok = await client.deleteTask(newId);
+
+      expect(ok, true);
+      tasks = await client.getTasks(); // refresh tasks
       expect(taskExists(newId), false);
     });
   });

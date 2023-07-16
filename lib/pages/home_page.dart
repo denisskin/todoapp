@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todoapp/app/routes.dart';
 import 'package:todoapp/providers/db.dart';
 import 'package:todoapp/providers/models/task.dart';
 import 'package:todoapp/themes/theme.dart';
@@ -185,7 +186,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: () => openTask(context),
+              onTap: () => AppRoutes.openNewTask(context),
               child: Text(
                 'Новое',
                 style: AppTheme.buttonNewTask,
@@ -198,7 +199,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   openTask(BuildContext context, {String id = ''}) async {
-    await Navigator.of(context).pushNamed('/task', arguments: id);
+    AppRoutes.openTask(context, id: id);
     setState(() {});
   }
 

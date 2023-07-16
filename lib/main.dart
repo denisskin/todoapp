@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:todoapp/pages/app.dart';
-import 'package:todoapp/providers/replication.dart';
+import 'package:todoapp/app/app.dart';
+import 'package:todoapp/app/di.dart';
 
-void main() {
-  Replication.start();
-  runApp(const MyApp());
+void main() async {
+  await Locator.init();
+  runApp(const App());
 }

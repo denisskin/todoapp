@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:todoapp/app/logger.dart';
 import 'package:todoapp/providers/models/task.dart';
-import 'package:todoapp/utils/logger.dart';
 
 class ApiClient {
   static const _baseUrl = 'https://beta.mrdekk.ru/todobackend';
@@ -50,26 +50,26 @@ class ApiClient {
     String method = 'GET',
     Object body = Null,
   }) async {
-    Log.l.i('API> $method $_baseUrl$url');
+    logger.i('API> $method $_baseUrl$url');
     final req = await client.openUrl(method, Uri.parse('$_baseUrl$url'));
     req.headers.set('content-type', 'application/json; charset=utf-8');
     req.headers.add('authorization', _authKey);
     req.headers.add('X-Last-Known-Revision', revision);
-    Log.l.d('API> *** REQUEST-HEADERS:\n${req.headers.toString()}');
+    logger.d('API> *** REQUEST-HEADERS:\n${req.headers.toString()}');
     if (body != Null) {
       req.write(jsonEncode(body));
     }
     final resp = await req.close();
     if (resp.statusCode != 200) {
-      Log.l.e('API> http-error: http-status: ${resp.statusCode}');
+      logger.e('API> http-error: http-status: ${resp.statusCode}');
       throw 'http-error: http-status is ${resp.statusCode}';
     }
     final cont = await (resp.transform(utf8.decoder)).join();
-    Log.l.d('API> RESPONSE-BODY: $cont\n');
+    logger.d('API> RESPONSE-BODY: $cont\n');
 
     final data = jsonDecode(cont) as Map<String, dynamic>;
     if (data['status'] != 'ok') {
-      Log.l.e('API> http-response-status is not OK (${data['status']})');
+      logger.e('API> http-response-status is not OK (${data['status']})');
       throw 'http-response-status is not OK (${data['status']})';
     }
     // update revision
