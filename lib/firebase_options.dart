@@ -26,10 +26,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -58,5 +55,15 @@ class DefaultFirebaseOptions {
     messagingSenderId: '352378359506',
     projectId: 'yatodolisttestapp',
     storageBucket: 'yatodolisttestapp.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAG7_9R_oJp2IuggppOYGwuPpZat1K-DQc',
+    appId: '1:352378359506:ios:e3b2e78d5649d5fc38e70b',
+    messagingSenderId: '352378359506',
+    projectId: 'yatodolisttestapp',
+    storageBucket: 'yatodolisttestapp.appspot.com',
+    iosClientId: '352378359506-2079o2g195dsvk8lj7fghi3betnt80n7.apps.googleusercontent.com',
+    iosBundleId: 'com.example.todoapp',
   );
 }
