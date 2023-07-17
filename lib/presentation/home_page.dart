@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todoapp/app/routes.dart';
-import 'package:todoapp/providers/db.dart';
-import 'package:todoapp/providers/models/task.dart';
+import 'package:todoapp/app/di.dart';
+import 'package:todoapp/app/route.dart';
+import 'package:todoapp/models/task.dart';
 import 'package:todoapp/themes/theme.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,12 +15,13 @@ class _HomePageState extends State<HomePage> {
   bool fViewAll = false;
 
   _HomePageState() {
-    DB.tasks.onUpdate(() async => setState(() {}));
+    Locator.tasks.onUpdate(() async => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
-    final tasks = fViewAll ? DB.tasks.listAll() : DB.tasks.listCurrent();
+    final tasks =
+        fViewAll ? Locator.tasks.listAll() : Locator.tasks.listCurrent();
 
     return Scaffold(
       body: CustomScrollView(
@@ -49,7 +50,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Padding(
                     padding: const EdgeInsets.fromLTRB(74, 0, 0, 0),
-                    child: Text('Выполнено – ${DB.tasks.countCompleted()}',
+                    child: Text('Выполнено – ${Locator.tasks.countCompleted()}',
                         style: AppTheme.textDone)),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 20, 8, 40),
@@ -186,7 +187,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: () => AppRoutes.openNewTask(context),
+              onTap: () => AppRouter.openNewTask(context),
               child: Text(
                 'Новое',
                 style: AppTheme.buttonNewTask,
@@ -199,20 +200,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   openTask(BuildContext context, {String id = ''}) async {
-    AppRoutes.openTask(context, id: id);
+    AppRouter.openTask(context, id: id);
     setState(() {});
   }
 
   setTaskComplete(Task task, bool f) {
     setState(() {
       task.done = f;
-      DB.tasks.update(task);
+      Locator.tasks.update(task);
     });
   }
 
   removeTask(String id) {
     setState(() {
-      DB.tasks.remove(id);
+      Locator.tasks.remove(id);
     });
   }
 }

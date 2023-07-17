@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todoapp/providers/models/task.dart';
-import 'package:todoapp/providers/db.dart';
+import 'package:todoapp/app/di.dart';
+import 'package:todoapp/models/task.dart';
 import 'package:todoapp/themes/theme.dart';
 
 class TaskPage extends StatefulWidget {
@@ -21,7 +21,7 @@ class _TaskPageState extends State<TaskPage> {
   @override
   void initState() {
     super.initState();
-    task = DB.tasks.get(widget.id);
+    task = Locator.tasks.get(widget.id);
   }
 
   bool get saveEnabled => task.text.isNotEmpty;
@@ -172,12 +172,12 @@ class _TaskPageState extends State<TaskPage> {
   );
 
   save() {
-    DB.tasks.update(task);
+    Locator.tasks.update(task);
     close();
   }
 
   delete() {
-    DB.tasks.remove(task.id);
+    Locator.tasks.remove(task.id);
     close();
   }
 

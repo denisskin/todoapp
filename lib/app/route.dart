@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:todoapp/pages/home_page.dart';
-import 'package:todoapp/pages/task_page.dart';
+import 'package:todoapp/presentation/home_page.dart';
+import 'package:todoapp/presentation/task_page.dart';
 
-abstract class AppRoutes {
+abstract class AppRouter {
   static const home = '/';
   static const task = '/task';
 

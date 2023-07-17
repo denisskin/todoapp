@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:todoapp/api/api.dart';
-import 'package:todoapp/providers/models/task.dart';
+import 'package:todoapp/models/task.dart';
 import 'package:todoapp/utils/utils.dart';
 
 void main() {
